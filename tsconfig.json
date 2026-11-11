@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    // Файлы и выходная папка
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    // Окружение
+    "module": "nodenext",
+    "target": "es2022",
+    "types": [],
+
+    // Что генерировать
+    "sourceMap": true,
+    "declaration": false,
+
+    // Строгая проверка типов
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+
+    // Прочее
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}

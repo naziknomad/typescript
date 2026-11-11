@@ -1,0 +1,22 @@
+{
+  "name": "09.11",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node src/index.ts",
+    "start:1": "node src/1-functions.ts",
+    "start:2": "node src/2-errors.ts",
+    "start:3": "node src/3-interface.ts",
+    "check": "tsc --noEmit",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}
