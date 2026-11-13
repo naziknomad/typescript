@@ -20,8 +20,8 @@ function log(message: string): void {
 }
 
 console.log(add(2, 3)); // 5
-// console.log(multiply(4, 5)); // 20
-// console.log(greet("Айгерим")); // Привет, Айгерим!
-// console.log(greet("Айгерим", "Алматы")); // Привет, Айгерим из города Алматы!
-// console.log(price(10000, 15)); // 8500
-// log("готово");
+console.log(multiply(4, 10)); // 40
+console.log(greet("Назгуль")); // Привет, Назгуль!
+console.log(greet("Айгерим", "Алматы")); // Привет, Айгерим из города Алматы!
+console.log(price(10000, 20)); // 8000
+log("готово");
