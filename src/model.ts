@@ -54,10 +54,21 @@ function earnedPoints(list: Workout[]): number {
   return sum;
 }
 
+// Невыполненные тренировки
+function notDone(list: Workout[]): Workout[] {
+  // Оставляем в списке только тренировки, где done равно false
+  return list.filter((w) => !w.done);
+}
+
 // Вызываем функцию на нашем списке и сохраняем результат
 const points = earnedPoints(workouts);
+
+// Находим невыполненные тренировки в нашем списке
+const left = notDone(workouts);
 
 // Выводим аватара в консоль
 console.log(avatar);
 // Выводим, сколько баллов заработано
 console.log(`Баллов заработано: ${points}`);
+// Выводим названия тренировок, которые ещё осталось сделать
+console.log(left.map((w) => w.title));
