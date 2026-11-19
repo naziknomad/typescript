@@ -42,6 +42,8 @@ const workouts: Workout[] = [
 function earnedPoints(list: Workout[]): number {
   // Копилка баллов, в начале она пустая
   let sum = 0;
+  // если здесь поменять на const то в строке 51 выдаст ошибку так как баллы копятся
+  // и значение меняется - следоватлеьно только let
   // Берём тренировки из списка по одной
   for (const w of list) {
     // Если тренировка выполнена, считаем её баллы
@@ -72,3 +74,45 @@ console.log(avatar);
 console.log(`Баллов заработано: ${points}`);
 // Выводим названия тренировок, которые ещё осталось сделать
 console.log(left.map((w) => w.title));
+
+
+const plan: string[] = ["Растяжка", "Силовая", "Кардио"];
+console.log(plan);
+plan.push("animal flow");
+//добавит еще один тип тренировки в конец
+console.log(plan);
+plan.splice(2, 1, "Бег", "Плавание");
+//начиная с кардио удалит один элемент и добавит бег и плавание
+console.log(plan);
+console.log(plan.length);
+plan.splice(0, plan.length - 1);
+//удалит все кроме последнего значения
+console.log(plan);
+plan.push("Пилатес", "Функциональная");
+//добавит новые значения пилатес и функциональная в конец
+console.log(plan);
+console.log(plan.shift());
+//удаляет первое значение и отображает его
+console.log(plan);
+console.log(plan.find((t) => t.startsWith("Ф")));
+//должна найти значение название которое начинается с Ф (одна из новых функций была вставлена здесь)
+console.log(plan);
+
+
+//Новые функции
+console.log(plan.pop());
+//удаляет последнее значение и показывает его
+console.log(plan);
+console.log(plan.includes("Пилатес"));
+//проверят есть ли значение пилатес и определеяет true или false
+console.log(plan);
+
+
+
+
+let abc:number = 3.14;
+console.log(abc);
+let def:string = (15).toString();
+console.log(def);
+let xyz:boolean = 1 < 2;
+console.log(xyz);
