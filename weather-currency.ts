@@ -24,9 +24,9 @@ async function getWeather(): Promise<Weather> {
 }
 
 //отправляем запрос на получение курса валют (придет не сразу)
-async function getRates(): Promise<Rates> {
-    //адрес куда отрправлен запрос
-    const url = "https://open.er-api.com/v6/latest/USD";
+async function getRates(base: string = "USD"): Promise<Rates> {
+    //адрес куда отрправлен запрос (base - валюта, относительно которой даны курсы)
+    const url = `https://open.er-api.com/v6/latest/${base}`;
     //ожидаем пока ответят
     const response = await fetch(url);
     //мы получили данные, но его нужно распаковать в json
@@ -35,27 +35,56 @@ async function getRates(): Promise<Rates> {
     return data;
     // возращает обещание 
 }
-//основная функция запускающая все выше написанное
-async function main() {
-    const [weather, currency] = await Promise.all([getWeather(), getRates()]);
-    //просим одновременно и погоду и курс валют и снова ждем изза await
-
-    //нам нужны именно эти валюты
-    const kzt = currency.rates.KZT;
-    const eur = currency.rates.EUR;
-    const cny = currency.rates.CNY;
-
-
-    console.log(`В Алматы сейчас ${weather.current.temperature_2m} °C`);
-    //печатаем как нам нужно чтобы выдавал шаблонно ответ и данные с weather
-    console.log(`Курс USD к KZT: ${currency.rates.KZT.toFixed(2)}`);
-    //печатаем как нам нужно чтобы выдавал шаблонно ответ и данные с currency по всем трем валютам
-    console.log(`Курс EUR к KZT: ${(currency.rates.KZT / currency.rates.EUR).toFixed(2)}`);
-    console.log(`Курс CNY к KZT: ${(currency.rates.KZT / currency.rates.CNY).toFixed(2)}`);
+//просим курсы относительно USD и относительно EUR одновременно
+//здесь нужен именно Promise.all: без обоих курсов кросс-курс не посчитать
+async function getUsdEurRates(): Promise<{ usd: Rates; eur: Rates }> {
+    const [usd, eur] = await Promise.all([getRates("USD"), getRates("EUR")]);
+    return { usd, eur };
 }
 
+//основная функция запускающая все выше написанное
+async function main() {
+    const [weatherResult, currencyResult] = await Promise.allSettled([getWeather(), getUsdEurRates()]);
+    //просим одновременно и погоду и курс валют и снова ждем изза await
+    //allSettled ждет оба запроса и не падает, даже если один из них завершился ошибкой
 
+    console.log(weatherResult);
+    console.log(currencyResult);
+    //печатаем результат в консоль, чтобы увидеть что пришло
+
+    //проверяем каждый результат отдельно: fulfilled - успех (value), rejected - ошибка (reason)
+    if (weatherResult.status === "fulfilled") {
+        const weather = weatherResult.value;
+        console.log(`В Алматы сейчас ${weather.current.temperature_2m} °C`);
+        //печатаем как нам нужно чтобы выдавал шаблонно ответ и данные с weather
+    } else {
+        console.log("Не удалось получить погоду:", weatherResult.reason);
+    }
+
+    if (currencyResult.status === "fulfilled") {
+        const { usd, eur } = currencyResult.value;
+        const usdKzt = usd.rates.KZT;
+        const eurKzt = eur.rates.KZT;
+        const usdCny = usd.rates.CNY;
+        //курса может не оказаться в ответе - тогда дальше считать нельзя
+        if (usdKzt === undefined || eurKzt === undefined || usdCny === undefined) {
+            console.log("В ответе нет нужных валют");
+            return;
+        }
+        console.log(`Курс USD к KZT: ${usdKzt.toFixed(2)}`);
+        //печатаем как нам нужно чтобы выдавал шаблонно ответ и данные с currency по всем трем валютам
+        console.log(`Курс EUR к KZT: ${eurKzt.toFixed(2)}`);
+        console.log(`Курс CNY к KZT: ${(usdKzt / usdCny).toFixed(2)}`);
+        //кросс-курс EUR/USD через тенге: сколько долларов стоит один евро
+        console.log(`Кросс-курс EUR/USD через KZT: ${(eurKzt / usdKzt).toFixed(4)}`);
+    } else {
+        console.log("Не удалось получить курс валют:", currencyResult.reason);
+    }
+}
+
+console.log("старт");
 main();
 // вызывает главную фунцкию main которая запускает весь выше указанный код и ждем выполнения
+console.log("конец");
 
 
